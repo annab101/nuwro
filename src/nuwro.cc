@@ -530,6 +530,108 @@ void NuWro::finishevent(event* e, params &p)
 
 								 // copy particle from out to post if coherent interaction
 
+	///////////////////////////////////////////////////
+	// Add on-shell out vector for INCL interface    //
+	//                                               //
+	// Code is taken from kaskada and is the same as //
+	// the process for particles in the case that    //
+	// FSI_on = false.                               //
+	///////////////////////////////////////////////////
+
+	// Loop over every particle from the primary vertex.
+	nucleus *nucl = make_nucleus(p);
+	for (int i = 0; i < e->out.size(); i++)
+	{
+		particle p1 = e->out[i];
+
+	
+		if (nucleon (p1.pdg))
+		{
+			p1.primary = true;
+
+			double kaskada_w = (e->flag.qel && p.U_switch == 1 && p.sf_method != 0) ? 0.0 : p.kaskada_w;
+
+			// Tag primary and spectator nucleons form SF-event vertex
+			if(e->flag.qel and p.sf_method != 0) {
+				if (i == 1) {
+					p1.nucleon_id = 1;
+				}
+				else if (i == 2) {
+					p1.nucleon_id = 2;
+				}
+			}
+
+			// add energy substracted in the primary vertex for GFG LFG and SF
+			if (e->flag.qel and (p.sf_method != 0 or p.nucleus_target == 2)) {
+				p1.set_energy (p1.E() + nucl->Ef(p1) + kaskada_w);
+			}
+
+			else if (p.nucleus_target == 1 and (e->flag.qel or e->flag.res))
+				p1.set_energy (p1.E() + p.nucleus_E_b);
+
+			p1.set_fermi(nucl->Ef(p1));
+
+			// If kinetic energy is below "barrier" = Ef + kaskada_w, jail back to nucleus
+			if (p1.Ek() <= kaskada_w + p1.his_fermi)
+			{
+				p1.set_energy(p1.mass());
+				e->out_corrected.push_back(p1);
+				cout << "jailed" << endl;
+			}
+			else{
+				double U = (e->flag.qel && p.U_switch == 1 && p.sf_method != 0)
+					? p.FSI_on == 1
+						? e->optical_potential
+						: p1.pdg == pdg_proton ? e->averageCE : 0.0
+					: 0.0;
+
+				// If KE still below (Ef - U) at surface, jail nucleon
+				if (p1.Ek() <= p1.his_fermi + kaskada_w - U)
+				{
+					p1.set_energy(p1.mass());
+					e->out_corrected.push_back(p1);
+					cout << "jailed" << endl;
+				}
+				else{
+					p1.set_energy(p1.E() - p1.his_fermi - kaskada_w + U);
+					e->out_corrected.push_back(p1);
+				}
+			}
+		}
+		else if(hyperon (p1.pdg)) // if a hyperon
+		{
+			// Add BE
+			if(p.nucleus_target) p1.set_fermi(nucl->hyp_BE(p1.r.length(),p1.pdg));
+			else p1.set_fermi(0);
+			
+			if (p1.E() + p1.his_fermi < p1.mass())
+			{
+				p1.set_energy(p1.mass());
+				e->out_corrected.push_back(p1);
+				cout << "escaped" << endl;
+			}
+			else
+			{
+				p1.set_energy(p1.E() + p1.his_fermi);
+				if (p1.Ek() < p1.his_fermi)
+				{
+					p1.set_energy(p1.mass());
+					e->out_corrected.push_back(p1);
+					cout << "escaped" << endl;
+				}
+				// Subtract binding energy from hyperon energy and set momentum so it is on shell
+				else {
+					p1.set_energy(p1.E() - p1.his_fermi);
+					e->out_corrected.push_back(p1);
+				}
+			}
+		}
+		else{
+			e->out_corrected.push_back(p1);
+		}
+	}
+	delete nucl;
+
 	if (!e->flag.coh && !e->flag.lep && (e->par.nucleus_n + e->par.nucleus_p > 1))
 	{
 		kaskada k(p, *e, &input);
@@ -546,6 +648,12 @@ void NuWro::finishevent(event* e, params &p)
 			e->post.push_back(p);
 		}
 	}
+
+	/////////////////////////////////
+	// INCL interface will go here //
+	/////////////////////////////////
+
+
 }								 //end of finishevent
 
 void NuWro::raport(double i, double n, const char* text, int precision, int k, string label, bool toFile)

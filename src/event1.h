@@ -45,6 +45,7 @@ class event:public TObject
 		vector < particle > in;	  ///< vector of incoming particles
 		vector < particle > temp; ///< vector of temporary particles (daughters of primary vertex in DIS)
 		vector < particle > out;  ///< vector of outgoing particles (before fsi)
+		vector < particle > out_corrected;  ///< vector of outgoing particles (before fsi) adjusted to be on-shell
 		vector < particle > post; ///< vector of particles leaving the nucleus
 		vector < particle > all;  ///< vector of all particles (inclluding temporary fsi particles)
 
