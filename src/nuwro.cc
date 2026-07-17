@@ -574,9 +574,8 @@ void NuWro::finishevent(event* e, params &p)
 			// If kinetic energy is below "barrier" = Ef + kaskada_w, jail back to nucleus
 			if (p1.Ek() <= kaskada_w + p1.his_fermi)
 			{
-				p1.set_energy(p1.mass());
+				p1.set_energy(p1.mass() + 1);
 				e->out_corrected.push_back(p1);
-				cout << "jailed" << endl;
 			}
 			else{
 				double U = (e->flag.qel && p.U_switch == 1 && p.sf_method != 0)
@@ -588,9 +587,8 @@ void NuWro::finishevent(event* e, params &p)
 				// If KE still below (Ef - U) at surface, jail nucleon
 				if (p1.Ek() <= p1.his_fermi + kaskada_w - U)
 				{
-					p1.set_energy(p1.mass());
+					p1.set_energy(p1.mass() + 1);
 					e->out_corrected.push_back(p1);
-					cout << "jailed" << endl;
 				}
 				else{
 					p1.set_energy(p1.E() - p1.his_fermi - kaskada_w + U);
