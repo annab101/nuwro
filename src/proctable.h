@@ -38,7 +38,8 @@ enum {
  
 
      jailed=99,
-     escape=100
+     escape=100,
+     deex = 101
      };
 
 

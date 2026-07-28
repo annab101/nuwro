@@ -630,10 +630,16 @@ void NuWro::finishevent(event* e, params &p)
 	}
 	delete nucl;
 
-	if (!e->flag.coh && !e->flag.lep && (e->par.nucleus_n + e->par.nucleus_p > 1))
+	if (!e->flag.coh && !e->flag.lep && (e->par.nucleus_n + e->par.nucleus_p > 1) && !e->par.FSI_incl)
 	{
 		kaskada k(p, *e, &input);
 		k.kaskadaevent();		 // runs only if p.FSI_on is true
+	}
+	else if(!e->flag.coh && !e->flag.lep && (e->par.nucleus_n + e->par.nucleus_p > 1) && e->par.FSI_incl){
+		/////////////////////////////////
+		// INCL interface will go here //
+		/////////////////////////////////
+		// Skip coherent events && pass to kaskada if par.SFI_on is zero or events with 3222,3212, -2212, -2112 
 	}
 	else
 //	if(e->post.size()==0)   // copy out to post if no fsi
@@ -646,10 +652,6 @@ void NuWro::finishevent(event* e, params &p)
 			e->post.push_back(p);
 		}
 	}
-
-	/////////////////////////////////
-	// INCL interface will go here //
-	/////////////////////////////////
 
 
 }								 //end of finishevent
