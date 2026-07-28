@@ -26,6 +26,8 @@
 #include "mecevent.h"
 #include "args.h"
 #include "kaskada7.h"
+#include "inclkaskada.h"
+
 #include "sfevent.h"
 #include "Analyser1.h"
 #include "geomy.h"
@@ -532,8 +534,13 @@ void NuWro::finishevent(event* e, params &p)
 
 	if (!e->flag.coh && !e->flag.lep && (e->par.nucleus_n + e->par.nucleus_p > 1))
 	{
-		kaskada k(p, *e, &input);
-		k.kaskadaevent();		 // runs only if p.FSI_on is true
+        if (e->par.cascade_model == 0){
+    		kaskada k(p, *e, &input);
+    		k.kaskadaevent();		 // runs only if p.FSI_on is true
+        } else if (e->par.cascade_model == 1){
+            inclkaskada k(p, *e, &input);
+            k.inclevent();
+        }
 	}
 	else
 //	if(e->post.size()==0)   // copy out to post if no fsi

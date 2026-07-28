@@ -182,6 +182,7 @@
         </condition>
     </conditions>
   </param>
+  
     <param name="nucleus_target" type="select" ctype="int" default="2">
     <description><![CDATA[Models for the description of nucleus as a target]]></description>
     <options>
@@ -201,6 +202,13 @@
         <option key="1"><![CDATA[realistic density profile]]></option>
       </options>
       </param>
+<param name="cascade_model" type="select" ctype="int" default="0">
+    <description><![CDATA[Models for the cascade]]></description>
+    <options>
+      <option key="0"><![CDATA[Kaskada7]]></option>
+      <option key="1"><![CDATA[INCL]]></option>
+    </options>
+    </param>
   <param name="dyn_qel_cc" type="checkbox" ctype="bool" default="1">
     <description>Quasi elastic charged current</description>
   </param>
