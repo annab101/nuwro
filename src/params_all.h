@@ -43,6 +43,7 @@ PARAM(vec,geo_o,"0 0 0")\
 PARAM(vec,geo_d,"2000 2000 5000")\
 PARAM(int,nucleus_target,2)\
 PARAM(int,nucleus_model,1)\
+PARAM(int,cascade_model,0)\
 PARAM(bool,dyn_qel_cc,1)\
 PARAM(bool,dyn_qel_nc,0)\
 PARAM(bool,dyn_res_cc,1)\

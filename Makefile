@@ -18,13 +18,13 @@ FFLAGS       += ${INCL_BUILD_FLAGS_SPLIT}
 
 ifeq ($(OS),Darwin)
   # Flags for OSX
-  CXXFLAGS      = `${ROOTSYS}/bin/root-config --cflags` -fPIC -O2 $(DEBUGON) -I src -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -Wno-unused-but-set-variable -Wreorder -Wmissing-braces $(QTINCLUDEDIRS) -DVERSION=\"$(VERSION)\" -I${ROOTEGPythia6_ROOT}/include ${INCL_BUILD_INC_DIRS} ${INCL_LINK} ${INCL_BUILD_FLAGS_SPLIT}
+  CXXFLAGS      = `${ROOTSYS}/bin/root-config --cflags` -fPIC -O2 $(DEBUGON) -I src -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -Wno-unused-but-set-variable -Wreorder -Wmissing-braces $(QTINCLUDEDIRS) -DVERSION=\"$(VERSION)\" -I${ROOTEGPythia6_ROOT}/include ${INCL_INC_DIRS} ${INCL_LINK} ${INCL_BUILD_FLAGS_SPLIT}
 else
   # Flags for others
-  CXXFLAGS      = `${ROOTSYS}/bin/root-config --cflags` -fPIC -O2 $(DEBUGON) -I src -Wl,--no-as-needed -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -Wno-unused-but-set-variable -Wreorder -Wmissing-braces $(QTINCLUDEDIRS) -DVERSION=\"$(VERSION)\" -I${ROOTEGPythia6_ROOT}/include ${INCL_BUILD_INC_DIRS} ${INCL_LINK} ${INCL_BUILD_FLAGS_SPLIT}
+  CXXFLAGS      = `${ROOTSYS}/bin/root-config --cflags` -fPIC -O2 $(DEBUGON) -I src -Wl,--no-as-needed -Wall -Wno-unused-variable -Wno-sign-compare -Wno-unused-function -Wno-unused-but-set-variable -Wreorder -Wmissing-braces $(QTINCLUDEDIRS) -DVERSION=\"$(VERSION)\" -I${ROOTEGPythia6_ROOT}/include ${INCL_INC_DIRS} ${INCL_LINK} ${INCL_BUILD_FLAGS_SPLIT}
 endif
 
-LDFLAGS       = `${ROOTSYS}/bin/root-config --libs` -L${ROOTEGPythia6_ROOT}/lib -Wl,-rpath,${ROOTEGPythia6_ROOT}/lib -lEGPythia6 -lPythia6 -lGeom -lMinuit -lgfortran $(QTLIBS) ${INCL_BUILD_INC_DIRS} ${INCL_LINK} ${INCL_BUILD_FLAGS_SPLIT}
+LDFLAGS       = `${ROOTSYS}/bin/root-config --libs` -L${ROOTEGPythia6_ROOT}/lib -Wl,-rpath,${ROOTEGPythia6_ROOT}/lib -lEGPythia6 -lPythia6 -lGeom -lMinuit -lgfortran $(QTLIBS) ${INCL_INC_DIRS} ${INCL_LINK} ${INCL_BUILD_FLAGS_SPLIT}
 LD            = g++
 CXX           = g++
 CC            = g++
@@ -69,7 +69,7 @@ $(BIN)/nuwro:   $(addprefix src/,\
         qel_sigma.o kinsolver.o kinematics.o pdg.o target_mixer.o nucleus.o sfevent.o ff.o dirs.o rpa_2013.o\
         nucleus_data.o isotopes.o elements.o rew/PythiaQuiet.o rew/rewparams.o\
         nuwro.o beam.o nd280stats.o beamHist.o coh.o fsi.o pitab.o scatter.o inclkaskada.o kaskada7.o shell_sampler.o Interaction.o input_data.o data_container.o  main.o) \
-        $(EVENT_OBJS) $(SF_OBJS) $(DIS_OBJS) $(MEC_OBJS) $(ESPP_OBJS) $(HYBRID_OBJS) ${INCL_BUILD_INC_DIRS} ${INCL_LINK} ${INCL_BUILD_FLAGS_SPLIT}
+        $(EVENT_OBJS) $(SF_OBJS) $(DIS_OBJS) $(MEC_OBJS) $(ESPP_OBJS) $(HYBRID_OBJS) ${INCL_LINK} ${INCL_BUILD_FLAGS_SPLIT}
 		$(LINK.cc) $^ -o $@
 
 $(BIN)/kaskada:  $(addprefix src/,\
