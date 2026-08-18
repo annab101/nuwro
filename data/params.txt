@@ -340,6 +340,9 @@ FSI_on       = 1  // use (1) or not (0)
 # Total work of the cascade W (Eb = Ef + W);
 kaskada_w        = 7  // literature [7 MeV, 9 MeV]
 
+#cascade_model = 0  // Kaskada7
+cascade_model = 1   // INCL
+
 # For sf_method != 0
 # U_switch = 1 → use optical potential U in cascade (kaskada_w = 0)
 # U_switch = 0 → ignore U and keep kaskada_w
